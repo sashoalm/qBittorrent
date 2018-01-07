@@ -134,6 +134,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     m_ui->setupUi(this);
 
+    stopClipboardMonitoringTimer = new QTimer();
+    stopClipboardMonitoringTimer->setInterval(10*60*1000);
+    stopClipboardMonitoringTimer->setSingleShot(true);
+    connect(stopClipboardMonitoringTimer, SIGNAL(timeout()), SLOT(stopClipboardMonitoring()));
+
+
     Preferences* const pref = Preferences::instance();
     m_uiLocked = pref->isUILocked();
     setWindowTitle("qBittorrent " VERSION);
@@ -1401,6 +1407,25 @@ void MainWindow::updateTrayIconMenu()
     m_ui->actionToggleVisibility->setText(isVisible() ? tr("Hide") : tr("Show"));
 }
 
+void MainWindow::stopClipboardMonitoring()
+{
+    disconnect(qApp->clipboard(), SIGNAL(changed(QClipboard::Mode)), this, SLOT(clipboardChanged(QClipboard::Mode)));
+}
+
+void MainWindow::clipboardChanged(QClipboard::Mode mode)
+{
+  // Paste clipboard if there is an URL in it
+  QString clip_txt = qApp->clipboard()->text(mode);
+  clip_txt = clip_txt.trimmed();
+  if (!clip_txt.isEmpty()) {
+      if ((clip_txt.size() == 40 && !clip_txt.contains(QRegExp("[^0-9A-Fa-f]")))
+          || (clip_txt.size() == 32 && !clip_txt.contains(QRegExp("[^2-7A-Za-z]")))) {
+          stopClipboardMonitoringTimer->start();
+          downloadFromURLList(QStringList() << clip_txt);
+      }
+  }
+}
+
 QMenu* MainWindow::trayIconMenu()
 {
     if (m_trayIconMenu) return m_trayIconMenu;
@@ -1560,6 +1585,10 @@ void MainWindow::on_actionDownloadFromURL_triggered()
     if (!m_downloadFromURLDialog) {
         m_downloadFromURLDialog = new downloadFromURL(this);
         connect(m_downloadFromURLDialog, SIGNAL(urlsReadyToBeDownloaded(QStringList)), this, SLOT(downloadFromURLList(QStringList)));
+
+        stopClipboardMonitoring();
+        connect(qApp->clipboard(), SIGNAL(changed(QClipboard::Mode)), SLOT(clipboardChanged(QClipboard::Mode)));
+        stopClipboardMonitoringTimer->start();
     }
 }
 

@@ -34,6 +34,7 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 #include <QPointer>
+#include <QClipboard>
 
 class QCloseEvent;
 class QFileSystemWatcher;
@@ -121,6 +122,8 @@ private slots:
     void showConnectionSettings();
     void minimizeWindow();
     void updateTrayIconMenu();
+    void stopClipboardMonitoring();
+    void clipboardChanged(QClipboard::Mode mode);
     // Keyboard shortcuts
     void createKeyboardShortcuts();
     void displayTransferTab() const;
@@ -245,6 +248,7 @@ private:
 #endif
     bool m_hasPython;
     QMenu *m_toolbarMenu;
+    QTimer *stopClipboardMonitoringTimer;
 };
 
 #endif // MAINWINDOW_H
