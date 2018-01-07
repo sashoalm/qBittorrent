@@ -193,8 +193,11 @@ void AddNewTorrentDialog::show(QString source, QWidget *parent)
         else
             ok = dlg->loadTorrent(source);
 
-        if (ok)
-            dlg->QWidget::show();
+        if (ok) {
+            if (!magnetUri.isValid()){
+                dlg->QWidget::show();
+            }
+        }
         else
             delete dlg;
     }
@@ -692,6 +695,8 @@ void AddNewTorrentDialog::updateMetadata(const BitTorrent::TorrentInfo &info)
     // Update UI
     setupTreeview();
     setMetadataProgressIndicator(false, tr("Metadata retrieval complete"));
+
+    this->QWidget::show();
 }
 
 void AddNewTorrentDialog::setMetadataProgressIndicator(bool visibleIndicator, const QString &labelText)
