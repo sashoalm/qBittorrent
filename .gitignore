@@ -5,6 +5,7 @@ src/qbittorrent-nox
 src/release
 src/debug
 qbittorrent.pro.user*
+CMakeLists.txt.user
 conf.pri
 Makefile*
 *.pyc
