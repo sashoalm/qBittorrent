@@ -91,8 +91,24 @@ PreviewSelect::PreviewSelect(QWidget* parent, BitTorrent::TorrentHandle *const t
     close();
   }
   connect(this, SIGNAL(readyToPreviewFile(QString)), parent, SLOT(previewFile(QString)));
-  previewListModel->sort(NAME);
-  previewList->header()->setSortIndicator(0, Qt::AscendingOrder);
+
+  // We sort by name if all files have been downloaded, if not, we sort by progress
+  // so the user sees the already downloaded files on top.
+  bool allFilesAreAt100Percent = true;
+  for (int ii = 0; ii < previewListModel->rowCount(); ++ii) {
+    if (fp[ii] < 1.0) {
+        allFilesAreAt100Percent = false;
+        break;
+    }
+  }
+  if (allFilesAreAt100Percent) {
+      previewListModel->sort(NAME, Qt::AscendingOrder);
+      previewList->header()->setSortIndicator(NAME, Qt::AscendingOrder);
+  }else{
+      previewListModel->sort(PROGRESS, Qt::DescendingOrder);
+      previewList->header()->setSortIndicator(PROGRESS, Qt::DescendingOrder);
+  }
+
   previewList->selectionModel()->select(previewListModel->index(0, NAME), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 
   if (previewListModel->rowCount() == 1) {
