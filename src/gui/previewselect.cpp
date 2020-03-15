@@ -71,12 +71,13 @@ PreviewSelect::PreviewSelect(QWidget* parent, BitTorrent::TorrentHandle *const t
   // Fill list in
   QVector<qreal> fp = torrent->filesProgress();
   int nbFiles = torrent->filesCount();
+  const QVector<int> &priorities = torrent->filePriorities();
   for (int i = 0; i < nbFiles; ++i) {
     QString fileName = torrent->fileName(i);
     if (fileName.endsWith(".!qB"))
       fileName.chop(4);
     QString extension = Utils::Fs::fileExtension(fileName).toUpper();
-    if (Utils::Misc::isPreviewable(extension)) {
+    if (Utils::Misc::isPreviewable(extension) && priorities[i] > 0) {
       int row = previewListModel->rowCount();
       previewListModel->insertRow(row);
       previewListModel->setData(previewListModel->index(row, NAME), QVariant(fileName));
