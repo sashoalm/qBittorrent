@@ -67,6 +67,8 @@ PreviewSelect::PreviewSelect(QWidget* parent, BitTorrent::TorrentHandle *const t
   listDelegate = new PreviewListDelegate(this);
   previewList->setItemDelegate(listDelegate);
   previewList->header()->resizeSection(0, 200);
+  previewList->header()->setStretchLastSection(false);
+  previewList->header()->setSectionResizeMode(0, QHeaderView::Stretch);
   previewList->setAlternatingRowColors(pref->useAlternatingRowColors());
   // Fill list in
   QVector<qreal> fp = torrent->filesProgress();
