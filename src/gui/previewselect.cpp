@@ -111,6 +111,7 @@ PreviewSelect::PreviewSelect(QWidget* parent, BitTorrent::TorrentHandle *const t
   }
 
   previewList->selectionModel()->select(previewListModel->index(0, NAME), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+  connect(previewList, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_previewButton_clicked()));
 
   if (previewListModel->rowCount() == 1) {
     qDebug("Torrent file only contains one file, no need to display selection dialog before preview");
