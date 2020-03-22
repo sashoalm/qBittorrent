@@ -1236,7 +1236,7 @@ void TorrentHandle::setFirstLastPiecePriority(bool b)
             // worst case: AVI index = 1% of total file size (at the end of the file)
             int nNumPieces = ceil(fileSize(index) * 0.01 / pieceLength());
             for (int i = 0; i < nNumPieces; ++i) {
-                pp[extremities.first() + i] = prio;
+                // pp[extremities.first() + i] = prio;
                 pp[extremities.last() - i] = prio;
             }
         }
