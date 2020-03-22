@@ -628,6 +628,7 @@ void AddNewTorrentDialog::accept()
     BitTorrent::AddTorrentParams params;
 
     params.sequential = true;
+    params.firstLastPiecePriority = true;
 
     if (ui->skip_check_cb->isChecked())
         // TODO: Check if destination actually exists

@@ -3271,6 +3271,7 @@ void Session::createTorrentHandle(const libt::torrent_handle &nativeHandle)
     AddTorrentData data = m_addingTorrents.take(nativeHandle.info_hash());
 
     TorrentHandle *const torrent = new TorrentHandle(this, nativeHandle, data);
+    torrent->setFirstLastPiecePriority(true);
     m_torrents.insert(torrent->hash(), torrent);
 
     Logger *const logger = Logger::instance();

@@ -71,6 +71,7 @@ AddTorrentData::AddTorrentData()
     : resumed(false)
     , disableTempPath(false)
     , sequential(false)
+    , firstLastPiecePriority(false)
     , hasSeedStatus(false)
     , skipChecking(false)
     , ratioLimit(TorrentHandle::USE_GLOBAL_RATIO)
@@ -84,6 +85,7 @@ AddTorrentData::AddTorrentData(const AddTorrentParams &params)
     , savePath(params.savePath)
     , disableTempPath(params.disableTempPath)
     , sequential(params.sequential)
+    , firstLastPiecePriority(params.firstLastPiecePriority)
     , hasSeedStatus(params.skipChecking) // do not react on 'torrent_finished_alert' when skipping
     , skipChecking(params.skipChecking)
     , addForced(params.addForced)
@@ -218,6 +220,9 @@ TorrentHandle::TorrentHandle(Session *session, const libtorrent::torrent_handle 
 
     if (!data.resumed)
         setSequentialDownload(data.sequential);
+
+    if (!data.resumed)
+        setFirstLastPiecePriority(data.firstLastPiecePriority);
 }
 
 TorrentHandle::~TorrentHandle() {}
