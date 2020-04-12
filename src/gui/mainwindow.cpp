@@ -214,6 +214,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_searchFilter->setPlaceholderText(tr("Filter torrent list..."));
     m_searchFilter->setFixedWidth(200);
 
+    QShortcut *torrentFilterListFocusShortcut = new QShortcut(QKeySequence("Alt+A"), this);
+    connect(torrentFilterListFocusShortcut, SIGNAL(activated()), this, SLOT(focusTorrentFilterList()));
+
     QWidget *spacer = new QWidget(this);
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_ui->toolBar->insertWidget(m_searchFilterAction, spacer);
@@ -1501,6 +1504,11 @@ void MainWindow::on_actionRSSReader_triggered()
 {
     Preferences::instance()->setRSSEnabled(m_ui->actionRSSReader->isChecked());
     displayRSSTab(m_ui->actionRSSReader->isChecked());
+}
+
+void MainWindow::focusTorrentFilterList()
+{
+    m_searchFilter->setFocus(Qt::ShortcutFocusReason);
 }
 
 void MainWindow::on_actionSearchWidget_triggered()

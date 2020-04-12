@@ -105,6 +105,7 @@ public:
     void showNotificationBaloon(QString title, QString msg) const;
 
 private slots:
+    void focusTorrentFilterList();
     void toggleVisibility(QSystemTrayIcon::ActivationReason e = QSystemTrayIcon::Trigger);
 
     void balloonClicked();
